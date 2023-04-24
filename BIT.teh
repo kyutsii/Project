@@ -1,29 +1,47 @@
  #include <iostream>
-
+#include <fstream>
+#include <string>
 using namespace std;
-void yourAcc(){
-    cout << "lala";
-}
-void Dir(){
-   
-    string login = "dir123";
-    string password = "dir321";
-    string enteredLogin;
-    string enteredPassword;
-    cout << "write your login and password" << endl;
-    cin >>enteredLogin;
-    cin >> enteredPassword;
-    if (enteredLogin  == login && enteredPassword == password){
-            cout << "you are entered" << endl;
-    }else{
-        while (enteredLogin != login or enteredPassword != password){
-            cout << " try again"<< endl;
-            cin >> enteredLogin;
-            cin >> enteredPassword;
-        }
+
+void addAppliance() {
+string name, serialNumber;
+int quantity;
+float price;
+cout << "Enter the name of household appliances: "<<  endl;;
+cin >> name;
+cout << "Enter the series number of household appliances: " << endl;
+cin >> serialNumber;
+cout << "Enter the quantity of household appliances:" << endl;
+cin >> quantity;
+cout << "Enter the price of household appliances: ";
+cin >> price;
+ofstream appliancesFile("appliances.txt");
+appliancesFile << name << " " << serialNumber << " " << quantity << " " << price << endl;
+} 
+ void yourAcc(){
+    int action;
+    cin >> action;
+    switch (action){
+        case newarrival:
+        addAppliance();
+        break;
+        case reviewDeliery:
+        ();
+        break;
+        case reviewWorker:
+        ();
+        break;
+        case logout:
+        logout();
+        break;
+        default:
+        cout << " no such option";
+        break;
+        
     }
-}
-void Work(){
+    
+} 
+ void Worker(){
     string login = "work123";
     string password = "work321";
     string enteredLogin;
@@ -40,8 +58,8 @@ void Work(){
             cin >> enteredPassword;
         }
     }
-}
-void Deliv(){
+} 
+ void Delivery(){
     string login = "deliv123";
     string password = "deliv321";
     string enteredLogin;
@@ -59,22 +77,25 @@ void Deliv(){
             cin >> enteredPassword;
         }
     }
-}
-
-int main()
+} 
+ int main()
 {
     int account;
-    cout << " 1 2 3?"<< endl;
+    cout << " Choose your account: 1(Director), 2(Worker), 3(Delivery)?"<< endl;
     cin >> account;
     switch (account){
         case 1:
-            Dir();
+            Director();
             break;
         case 2:
-            Work();
+            Worker();
             break;
         case 3:
-            Deliv() ;
+            Delivery() ;
             break;
         default :
-            cout << " no account"; 
+            cout << " no account";
+    }
+
+    return 0;
+} 
