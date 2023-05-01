@@ -9,27 +9,7 @@ struct sold {
     int quantity;
     string serialNumber;
 };
-void addAppliance() {
-    cout <<"fnd";
-// string name, serialNumber;
-// int quantity;
-// float price;
-// cout << "Enter the name of household appliances: "<<  endl;;
-// cin >> name;
-// cout << "Enter the series number of household appliances: " << endl;
-// cin >> serialNumber;
-// cout << "Enter the quantity of household appliances:" << endl;
-// cin >> quantity;
-// cout << "Enter the price of household appliances: ";
-// cin >> price;
-// fstream appliancesFile("appliances.txt", fstream::out | fstream::app);
-// if (!appliancesFile.is_open()) {
-//     cout << "Error opening file!" << endl;
-//      return;
-//  }
-// appliancesFile << name << " " << serialNumber << " " << quantity << " " << price << endl;
-// appliancesFile.close();
-}
+
 void inputCheck(int& inputNumber, int lowerBound, int upperBound){
     while (!(cin >> inputNumber) || inputNumber < lowerBound || inputNumber > upperBound) {
         cin.clear(); // clear the error flags
@@ -47,7 +27,7 @@ void goToMenu(){
     inputCheck(button, 0, 0);
 }
 
-void fileContent(const string& filename, string emptyFileMessage){
+ void fileContent(const string& filename, string emptyFileMessage){
     string sales;
     ifstream ReadFile(filename);
     if(ReadFile.peek() == std::ifstream::traits_type::eof()){
@@ -69,21 +49,141 @@ void showInstructions(){
 void logout(){
     cout << "Вы вышли из аккаунта.";
 }
-void fileContent(const string& filename, string emptyFileMessage){
-    string sales;
+void deleteElement(const string& filename){
+    string sold;
     ifstream ReadFile(filename);
-    if(ReadFile.peek() == std::ifstream::traits_type::eof()){ 
-        // Метод peek() возвращает следующий символ в потоке, не удаляя его из потока. Если метод peek() возвращает значение traits_type::eof(), то это означает, что достигнут конец файла и файл пуст.
-        // eof() возвращает значение true, если при чтении файла дошли до его конца, и false в противном случае.
-        cout << emptyFileMessage << endl;
+    if(ReadFile.peek() == std::ifstream::traits_type::eof()){
+        cout << endl;
     }
     else{
-        while(getline (ReadFile, sales)){
-            cout << sales << endl;
+        string DeleteOrder;
+        cout << "Напишите название товара заказа который вы бы хотели удалить?>>";
+        cin >> DeleteOrder;
+        string LineDel;
+        bool elementFound = false; 
+        ifstream ReadFiledelOrder(filename);
+        ofstream DeleteOrdertemp("deltempsold.txt");
+        while(getline (ReadFiledelOrder, LineDel)){
+            if(LineDel.find(DeleteOrder) != string::npos){
+                elementFound = true; 
+                continue;
+            }
+            else{
+                DeleteOrdertemp << LineDel << endl;
+            }
         }
+        ReadFiledelOrder.close();
+        DeleteOrdertemp.close();
+        remove(filename.c_str());
+        rename("deltempsold.txt", filename.c_str());
+        if (elementFound) { 
+            cout << "Ваш запрос принят." << endl; 
+        } else { 
+            cout << "Запас данного материала закончился, пожалуйста сделайте заказ на поставку!" << endl; 
+        } 
+    }
+    ReadFile.close();
+    goToMenu();
+}
+void numberOfMaterials(const string& filename, string emptyFileMessage, string upperBound){
+    int count = 0;
+        string currentLine;
+        ifstream ReadDelivered(filename);
+        if (ReadDelivered.peek() == ifstream::traits_type::eof()) {
+            cout << emptyFileMessage << endl;
+        }
+        else {
+            while(getline(ReadDelivered, currentLine)){
+                count++;
+            }
+            cout << "Количество " << upperBound << " товаров: ";
+            cout << count;
+        }
+        ReadDelivered.close();
+}
+void moveElement(const string& filename1, const string& filename2) { 
+    string sales;
+    ifstream ReadFile(filename1); 
+    if(ReadFile.peek() == std::ifstream::traits_type::eof()){
+        cout << endl;
+    }
+    else{
+        cout << "Пожалуйста напишите название техники, которую вы бы хотели продать" << endl; 
+        string elementToMove; 
+        cin >> elementToMove; 
+     
+        string currentLineSell; 
+        string currentLineSold; 
+        bool elementFound = false; 
+        ifstream sale(filename1); 
+        ofstream saletemp("saletemp.txt"); 
+        ifstream sold(filename2); 
+        ofstream soldtemp("soldtemp.txt"); 
+        while (getline(sold, currentLineSold)) { 
+            soldtemp << currentLineSold << endl; 
+        } 
+        while (getline(sale, currentLineSell)) { 
+            if (currentLineSell.find(elementToMove) != string::npos) { 
+                elementFound = true; 
+                soldtemp << currentLineSell << endl; 
+            } else { 
+                saletemp << currentLineSell << endl; 
+            } 
+        } 
+        sale.close(); 
+        saletemp.close(); 
+        sold.close(); 
+        soldtemp.close(); 
+        remove(filename1.c_str()); 
+        rename("saletemp.txt", filename1.c_str()); 
+        remove(filename2.c_str()); 
+        rename("soldtemp.txt", filename2.c_str()); 
+     
+        if (elementFound) { 
+            cout << "Ваш запрос принят." << endl; 
+        } else { 
+            cout << "Запас данной техники закончился, пожалуйста сделайте заказ на поставку!" << endl; 
+        } 
+    }
+    ReadFile.close();
+    goToMenu();
+}
+void salaryCounter(const string & filename, string emptyFileMessage){
+    int stake = 1000;
+    string currentLine;
+    ifstream ReadFile(filename);
+    if (ReadFile.peek() == ifstream::traits_type::eof()) {
+        cout << emptyFileMessage << endl;
+    } else {
+        while(getline (ReadFile, currentLine)){
+            cout << currentLine << " - " << stake << "с" << endl;
+        }
+        int count = 0;
+        string lineCount;
+        ifstream ReadDelivered(filename);
+        while(getline(ReadDelivered, lineCount)){
+            count++;
+        }
+        cout << "Ваш заработок: " << count * stake << "сомов";
+        ReadDelivered.close();
     }
     ReadFile.close();
 }
+// void fileContent(const string& filename, string emptyFileMessage){
+//     string sales;
+//     ifstream ReadFile(filename);
+//     if(ReadFile.peek() == std::ifstream::traits_type::eof()){ 
+//         // Метод peek() возвращает следующий символ в потоке, не удаляя его из потока. Если метод peek() возвращает значение traits_type::eof(), то это означает, что достигнут конец файла и файл пуст.
+//         // eof() возвращает значение true, если при чтении файла дошли до его конца, и false в противном случае.
+//         cout << emptyFileMessage << endl;
+//     }
+//     else{
+//         while(getline (ReadFile, sales)){
+//             cout << sales << endl;
+//         }
+//     }
+//     ReadFile.close();
+// }
 void searchFromFile(const string& filename){
     int subMenuNumber;
     string nameSearch, searchSerialNumber;
@@ -164,15 +264,17 @@ void searchFromFile(const string& filename){
 void DirectorAcc(){
     int action;
     cin >> action;
-    cout << "1. Показать список всех бытовой техники (Показывает список бытовой техники, который есть в магазине";
-    cout <<"2. Показать количество бытовой техники (Показывает количество бытовой техники по категории";
+    cout << "1. Показать список всех бытовой техники ";
+    cout <<"2. Показать количество бытовой техники ";
     cout << "3. Показать бытовую технику с самым максимальным количеством";
-    cout<< "4. Показать бытовую технику с самым минимальным количеством";
+    cout<<  "4. Показать бытовую технику с самым минимальным количеством";
     cout << "5. Показать отчет по закупкам об бытовой техники";
     cout << "6. Выход ( Выходит из программы)";
 }
-void menuWorker();
- inputCheck(action, 1, 8);
+void menuWorker(){
+    int action;
+    cin >> action;
+//  inputCheck(action, 1, 8);
     switch(action) { 
         case 1: 
         fileContent("sales.txt", "Нет товаров для продажи."); 
@@ -209,11 +311,20 @@ void menuWorker();
     }
     
 }
- void deliverymenu(){
-      cout << "Выбор меню:>>";
-    inputCheck(menuNumber, 1, 8);
-    switch(menuNumber) { 
+void deliverymenu(){
+    int action;
+     cout << "1.Показать список материалов для доставки";
+      cout << "2.Показать доставленные заказы" ;
+      cout << "3.Доставить заказ";
+      cout << "4.количествотво доставленной техники";
+      cout<< "5.Показать количество заказанной";
+      cout << "6.Показать мой заработок" ;
+      cout << "7.Выход";
+      cin >> action;
+    // inputCheck(menuNumber, 1, 8);
+    switch(action) { 
         case 1: 
+    cout << "если закончили нажмите 0 ";
     fileContent("sold.txt", "Нет проданных товаров.");
     goToMenu(); 
     break; 
@@ -238,10 +349,7 @@ void menuWorker();
      goToMenu(); 
      break; 
      case 7: 
-    showInstructions();  
-     break; 
-     case 8: 
-     logout;
+     logout();
      break; 
      default: 
      cout << "no such option";
@@ -278,6 +386,7 @@ void Worker(){
     cin >> enteredPassword;
     if (enteredLogin  == login && enteredPassword == password){
             cout << "you are entered" << endl;
+            menuWorker();
     }else{
         while (enteredLogin != login or enteredPassword != password){
             cout << " try again"<< endl;
@@ -295,7 +404,7 @@ void Delivery(){
     cin >>enteredLogin;
     cin >> enteredPassword;
     if (enteredLogin  == login && enteredPassword == password){
-             yourAcc();
+             deliverymenu();
             
     }else{
         while (enteredLogin != login or enteredPassword != password){
