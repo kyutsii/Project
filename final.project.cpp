@@ -14,10 +14,10 @@ void logout(){
 }
 void inputCheck(int& inputNumber, int lowerBound, int upperBound){
     while (!(cin >> inputNumber) || inputNumber < lowerBound || inputNumber > upperBound) {
-        cin.clear(); // clear the error flags
-        cin.ignore(numeric_limits<std::streamsize>::max(), '\n'); // ignore the rest of the input
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
         if(lowerBound == 0 and upperBound == 0){
-            cout << "Для выхода в главное меню введите 0:>>";
+            cout << "Для выхода нажмите 0";
         }
         else {
             cout << "Произошла ошибка. Введите число от " << lowerBound << " до " << upperBound << endl;
@@ -135,7 +135,7 @@ void moveElement(const string& filename1, const string& filename2) {
     ReadFile.close();
     endMenu();
 }
-void maxMinMaterials(int menuNumber){
+void maxMinAppliences(int menuNumber){
     ifstream ReadSold("sold.txt");
     if (ReadSold.peek() == ifstream::traits_type::eof()) {
         cout << "Нет заказов." << endl;
@@ -146,11 +146,11 @@ void maxMinMaterials(int menuNumber){
         string serialNumber;
     
         while (ReadSold >> name >> quantity >> serialNumber) {
-            sold materials;
-            materials.name = name;
-            materials.quantity = quantity;
-            materials.serialNumber = serialNumber;
-            Sold.push_back(materials);
+            sold Appliences;
+            Appliences.name = name;
+            Appliences.quantity = quantity;
+            Appliences.serialNumber = serialNumber;
+            Sold.push_back(Appliences);
         }
         if (Sold.empty()) {
             cout << "Нет никаких заказов." << endl;
@@ -164,14 +164,14 @@ void maxMinMaterials(int menuNumber){
                     MaterialWithMaxOrders = now.quantity;
                 }
             }
-            vector <string> MaterialsWithMaxOrders;
+            vector <string> appliencesWithMaxOrders;
             for (auto now : Sold) {
                 if (now.quantity == MaterialWithMaxOrders) {
-                    MaterialsWithMaxOrders.push_back(now.name);
+                    appliencesWithMaxOrders.push_back(now.name);
                 }
             }
             cout << "Результаты: ";
-            for (auto now : MaterialsWithMaxOrders) {
+            for (auto now : appliencesWithMaxOrders) {
                 cout << now << endl;
             }
         }
@@ -182,14 +182,14 @@ void maxMinMaterials(int menuNumber){
                     MaterialWithMinOrders = now.quantity;
                 }
             }
-            vector <string> MaterialsWithMinOrders;
+            vector <string> AppliencesWithMinOrders;
             for (auto now : Sold) {
                 if (now.quantity == MaterialWithMinOrders) {
-                    MaterialsWithMinOrders.push_back(now.name);
+                    AppliencesWithMinOrders.push_back(now.name);
                 }
             }
             cout << "Результаты:  ";
-            for (auto now : MaterialsWithMinOrders) {
+            for (auto now : AppliencesWithMinOrders) {
                 cout << now << endl;
             }
         }
@@ -226,12 +226,12 @@ void searchFromFile(const string& filename){
         inputCheck(subMenuNumber, 1, 2);
         int symbol = 0;
         if(subMenuNumber == 1){
-            cout << "Напишите название материала для поиска:";
+            cout << "Напишите название техники для поиска:";
             cin >> nameSearch;
             cout << "Результаты поиска:" << endl;
             ifstream ReadFile(filename);
-            if (ReadFile.peek() == std::ifstream::traits_type::eof()) {
-                cout << "Нет товаров для продажи." << endl;
+            if (ReadFile.peek() == ifstream::traits_type::eof()) {
+                cout << "Нет техники для продажи." << endl;
                 break;
             }
             else {
@@ -244,7 +244,7 @@ void searchFromFile(const string& filename){
                 }
     
                 if(symbol != 0) {
-                    cout << endl << "0 - К главному меню" << endl;
+                    cout << endl << "0 - для выхода" << endl;
                     inputCheck(button, 0, 0);
                     break;
                 }
@@ -253,13 +253,13 @@ void searchFromFile(const string& filename){
                     cout << "Попробуйте ввести заново";
                 }
             }
-            cout << endl << "0 - К главному меню" << endl;
+            cout << endl << "0 - для выхода" << endl;
             inputCheck(button, 0, 0);
             ReadFile.close();
         }
         else if(subMenuNumber == 2){
             symbol = 0;
-            cout << endl << "Напишите номер для поиска:>>";
+            cout << endl << "Напишите номер для поиска:";
             searchSerialNumber:
             cin >> searchSerialNumber;
             cout << "Результаты поиска:" << endl;
@@ -279,17 +279,17 @@ void searchFromFile(const string& filename){
                 
                 
                 if(symbol != 0){
-                    cout << endl << "0 - К главному меню" << endl;
+                    cout << endl << "0 - для выхода" << endl;
                     inputCheck(button, 0, 0);
                     break;
                 }
                 else if(symbol == 0){
                     cout << "Не удалось найти товар " << endl;
-                    cout << "Попробуйте  заново:>>";
+                    cout << "Попробуйте  заново";
                     goto searchSerialNumber;
                 }
             }
-            cout << endl << "0 - К главному меню" << endl;
+            cout << endl << "0 - для выхода" << endl;
             inputCheck(button, 0, 0);
             ReadFile.close();
         }
@@ -313,11 +313,11 @@ void AppliencesNumber(const string& filename, string emptyFileMessage, string up
 }
 void directorMenu(){
     int action;
-    cout << "1. Показать список всей бытовой техники " << endl;
-    cout <<"2. Показать количество бытовой техники " << endl;
-    cout << "3. Показать бытовую технику с самым максимальным количеством" << endl;
-    cout<<  "4. Показать бытовую технику с самым минимальным количеством" << endl;
-    cout << "5. Выход" << endl;
+    cout << "1. Show the list of all household appliances" << endl;
+    cout << "2. Show the total count of household appliances" << endl;
+    cout << "3. Show the household appliance with the maximum count" << endl;
+    cout << "4. Show the household appliance with the minimum count" << endl;
+    cout << "5. Exit" << endl;
     cin >> action;
     switch(action){
         case 1:
@@ -325,12 +325,12 @@ void directorMenu(){
         endMenu();
         break;
         case 2:
-        AppliencesNumber("material.number", "Нет техники.", "отсутствует");
+        AppliencesNumber("material.number","No appliances.", "missing");
         endMenu();
         break;
         case 3:
         case 4:
-        maxMinMaterials(action);
+        maxMinAppliences(action);
         endMenu();
         break;
         case 5:
@@ -343,35 +343,35 @@ void directorMenu(){
 }
 void menuWorker(){
     int action;
-    cout << " 1.Показать весь список материалов для продажи" << endl;
-    cout <<"2.Искать материал" << endl;
-    cout << "3.Показать отчет по продаже" << endl << "4.Выполнить продажу оборудований" << endl;
-    cout << "5.Сделать заказ отсутствующего товара" << endl ;
-    cout<< "6.Удалить заказ" << endl;
-    cout << "7.Выход" << endl;
+    cout << "1. Show the full list of available appliances" << endl;
+    cout << "2. Search for an appliance" << endl;
+    cout << "3. Show sales report" << endl << "4. Make a sale" << endl;
+    cout << "5. Order missing appliance" << endl;
+    cout << "6. Delete an order" << endl;
+    cout << "7. logout" << endl;
     cin >> action;
     switch(action) { 
         case 1: 
-        fileContent("sales.txt", "Нет товаров для продажи."); 
+        fileContent("sales.txt", "No appliance for sale"); 
         endMenu(); 
         break; 
         case 2: 
         searchFromFile("sales.txt"); 
          break; 
          case 3: 
-        fileContent("sold.txt", "Нет проданных товаров."); 
+        fileContent("sold.txt", "No sold items."); 
         endMenu(); 
         break; 
         case 4: 
-       fileContent("sales.txt", "Нет товаров для продажи."); 
+       fileContent("sales.txt", "No appliance for sale"); 
        moveElement("sales.txt", "sold.txt"); 
        break; 
        case 5:
-       fileContent("nomaterials.txt", "Нет отсутствующих товаров.");  
-       moveElement("nomaterials.txt", "need_materials.txt"); 
+       fileContent("noappliences.txt", "No out-of-stock items.");  
+       moveElement("noappliences.txt", "need_appliences.txt"); 
        break; 
        case 6: 
-       fileContent("sold.txt", "Нет заказов."); 
+       fileContent("sold.txt", "No orders."); 
        deleteElement("sold.txt"); 
        break; 
        case 7: 
@@ -385,39 +385,38 @@ void menuWorker(){
 }
 void deliverymenu(){
     int action;
-     cout << "1.Показать список материалов для доставки";
-      cout << "2.Показать доставленные заказы" ;
-      cout << "3.Доставить заказ";
-      cout << "4.количествотво доставленной техники";
-      cout<< "5.Показать количество заказанной";
-      cout << "6.Показать мой заработок" ;
-      cout << "7.Выход";
+    cout << "1. Show list of materials for delivery";
+    cout << "2. Show delivered orders";
+    cout << "3. Deliver an order";
+    cout << "4. Show the amount of delivered equipment";
+    cout << "5. Show the amount of ordered equipment";
+    cout << "6. Show my earnings";
+    cout << "7. logout"
       cin >> action;
-    // inputCheck(menuNumber, 1, 8);
     switch(action) { 
         case 1: 
-    cout << "если закончили нажмите 0 ";
-    fileContent("sold.txt", "Нет проданных товаров.");
+    cout << "If finished, press 0. ";
+    fileContent("sold.txt", "No sold items");
     endMenu(); 
     break; 
     case 2: 
-    fileContent("delivered.txt", "Нет доставленных товаров."); 
+    fileContent("delivered.txt", "No delivered items."); 
      endMenu(); 
      break; 
    case 3: 
-     fileContent("sold.txt", "Нет проданных товаров."); 
+     fileContent("sold.txt", "No sold items"); 
       moveElement("sold.txt", "delivered.txt"); 
       break; 
     case 4: 
-     AppliencesNumber("delivered.txt", "Нет доставленных товаров.", "доставленнных"); 
+     AppliencesNumber("delivered.txt", "No items delivered.", "delivered"); 
     endMenu(); 
       break; 
      case 5: 
-      AppliencesNumber("sold.txt", "Нет проданных товаров.", "проданных"); 
+      AppliencesNumber("sold.txt", "No items sold.", "sold"); 
      endMenu(); 
        break; 
      case 6: 
-     salaryCounter("delivered.txt", "У вас нет доставленных товаров."); 
+     salaryCounter("delivered.txt", "You have no items delivered"); 
      endMenu(); 
      break; 
      case 7: 
