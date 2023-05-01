@@ -29,12 +29,12 @@ void endMenu(){
     cout << endl << "0 - для выхода" << endl;
     inputCheck(button, 0, 0);
 }
-void allAppliences( ){
- ifstream file("appliances.txt"); 
+void allAppliences(string filename ){
+  ifstream file("appliances.txt"); 
     string line;
 
     while (getline(file, line)) { 
-        cout << line <<endl; 
+        cout << line << "no appliances " << endl; 
     }
 
     file.close();
@@ -321,7 +321,7 @@ void directorMenu(){
     cin >> action;
     switch(action){
         case 1:
-        allAppliences();
+        allAppliences("allAppliences.txt");
         endMenu();
         break;
         case 2:
@@ -434,7 +434,9 @@ void Director(){
     string enteredLogin;
     string enteredPassword;
     cout << "write your login and password" << endl;
+    cout << "login:" << endl;
     cin >>enteredLogin;
+    cout << "password:" << endl;
     cin >> enteredPassword;
     if (enteredLogin  == login && enteredPassword == password){
             cout << "you are entered" << endl;
@@ -453,7 +455,9 @@ void Worker(){
     string enteredLogin;
     string enteredPassword;
     cout << "write your login and password" << endl;
+    cout << "login:" << endl;
     cin >>enteredLogin;
+    cout << "password:" << endl;
     cin >> enteredPassword;
     if (enteredLogin  == login && enteredPassword == password){
             cout << "you are entered" << endl;
@@ -472,7 +476,9 @@ void Delivery(){
     string enteredLogin;
     string enteredPassword;
     cout << "write your login and password" << endl;
+    cout << "login:" << endl;
     cin >>enteredLogin;
+    cout << "password:" << endl;
     cin >> enteredPassword;
     if (enteredLogin  == login && enteredPassword == password){
              deliverymenu();
