@@ -9,7 +9,9 @@ struct sold {
     int quantity;
     string serialNumber;
 };
-
+void logout(){
+    cout << "Вы вышли из аккаунта.";
+}
 void inputCheck(int& inputNumber, int lowerBound, int upperBound){
     while (!(cin >> inputNumber) || inputNumber < lowerBound || inputNumber > upperBound) {
         cin.clear(); // clear the error flags
@@ -23,8 +25,16 @@ void inputCheck(int& inputNumber, int lowerBound, int upperBound){
     }
 }
 void goToMenu(){
-    cout << endl << "0 - К главному меню" << endl;
+    int action;
+    cin >> action;
+    cout << endl << "0 - для выхода" << endl;
     inputCheck(button, 0, 0);
+    if (action == 0){
+         logout();
+    }
+   else{
+       cout << endl;
+   }
 }
 
  void fileContent(const string& filename, string emptyFileMessage){
@@ -46,9 +56,7 @@ void showInstructions(){
     fileContent("instructions.txt", " ");
     goToMenu();
 }
-void logout(){
-    cout << "Вы вышли из аккаунта.";
-}
+
 void deleteElement(const string& filename){
     string sold;
     ifstream ReadFile(filename);
@@ -148,6 +156,68 @@ void moveElement(const string& filename1, const string& filename2) {
     ReadFile.close();
     goToMenu();
 }
+void maxMinOfMaterials(int menuNumber){
+    ifstream ReadSold("sold.txt");
+    if (ReadSold.peek() == ifstream::traits_type::eof()) {
+        cout << "Нет заказов." << endl;
+    } else {
+        vector<sold> Sold;
+        string name;
+        int quantity;
+        string serialNumber;
+    
+        while (ReadSold >> name >> quantity >> serialNumber) {
+            sold materials;
+            materials.name = name;
+            materials.quantity = quantity;
+            materials.serialNumber = serialNumber;
+            Sold.push_back(materials);
+        }
+        if (Sold.empty()) {
+            cout << "Нет никаких заказов." << endl;
+            goToMenu();
+        }
+        
+        if (menuNumber == 3) {
+            int MaterialWithMaxOrders = INT_MIN;
+            for (auto now : Sold) {
+                if (now.quantity > MaterialWithMaxOrders) {
+                    MaterialWithMaxOrders = now.quantity;
+                }
+            }
+            vector <string> MaterialsWithMaxOrders;
+            for (auto now : Sold) {
+                if (now.quantity == MaterialWithMaxOrders) {
+                    MaterialsWithMaxOrders.push_back(now.name);
+                }
+            }
+            cout << "Результаты: ";
+            for (auto now : MaterialsWithMaxOrders) {
+                cout << now << endl;
+            }
+        }
+        else if (menuNumber == 4) {
+            int MaterialWithMinOrders = INT_MAX;
+            for (auto now : Sold) {
+                if (now.quantity < MaterialWithMinOrders) {
+                    MaterialWithMinOrders = now.quantity;
+                }
+            }
+            vector <string> MaterialsWithMinOrders;
+            for (auto now : Sold) {
+                if (now.quantity == MaterialWithMinOrders) {
+                    MaterialsWithMinOrders.push_back(now.name);
+                }
+            }
+            cout << "Результаты:  ";
+            for (auto now : MaterialsWithMinOrders) {
+                cout << now << endl;
+            }
+        }
+    }
+    ReadSold.close();
+    goToMenu();
+}
 void salaryCounter(const string & filename, string emptyFileMessage){
     int stake = 1000;
     string currentLine;
@@ -169,26 +239,11 @@ void salaryCounter(const string & filename, string emptyFileMessage){
     }
     ReadFile.close();
 }
-// void fileContent(const string& filename, string emptyFileMessage){
-//     string sales;
-//     ifstream ReadFile(filename);
-//     if(ReadFile.peek() == std::ifstream::traits_type::eof()){ 
-//         // Метод peek() возвращает следующий символ в потоке, не удаляя его из потока. Если метод peek() возвращает значение traits_type::eof(), то это означает, что достигнут конец файла и файл пуст.
-//         // eof() возвращает значение true, если при чтении файла дошли до его конца, и false в противном случае.
-//         cout << emptyFileMessage << endl;
-//     }
-//     else{
-//         while(getline (ReadFile, sales)){
-//             cout << sales << endl;
-//         }
-//     }
-//     ReadFile.close();
-// }
 void searchFromFile(const string& filename){
     int subMenuNumber;
     string nameSearch, searchSerialNumber;
     while(true){
-        cout << "Выберите: каким способом хотите искать:" << endl << "1.По названию" << endl << "2.По дате" << endl;
+        cout << "Выберите: каким способом хотите искать:" << endl << "1.По названию" << endl << "2.По номеру" << endl;
         inputCheck(subMenuNumber, 1, 2);
         int symbol = 0;
         if(subMenuNumber == 1){
@@ -263,18 +318,28 @@ void searchFromFile(const string& filename){
 }
 void DirectorAcc(){
     int action;
-    cin >> action;
-    cout << "1. Показать список всех бытовой техники ";
+    
+    cout << "1. Показать список всей бытовой техники ";
     cout <<"2. Показать количество бытовой техники ";
     cout << "3. Показать бытовую технику с самым максимальным количеством";
     cout<<  "4. Показать бытовую технику с самым минимальным количеством";
     cout << "5. Показать отчет по закупкам об бытовой техники";
     cout << "6. Выход ( Выходит из программы)";
+    cin >> action;
+    switch(action){
+        case 1:
+        
+    }
 }
 void menuWorker(){
     int action;
     cin >> action;
-//  inputCheck(action, 1, 8);
+    cout << " 1.Показать весь список материалов для продажи" << endl;
+    cout <<"2.Искать материал" << endl;
+    cout << "3.Показать отчет по продаже" << endl << "4.Выполнить продажу оборудований" << endl;
+    cout << "5.Сделать заказ отсутствующего товара" << endl ;
+    cout<< "6.Удалить заказ" << endl;
+    cout << "7.Выход" << endl;
     switch(action) { 
         case 1: 
         fileContent("sales.txt", "Нет товаров для продажи."); 
