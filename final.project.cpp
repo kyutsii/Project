@@ -24,20 +24,22 @@ void inputCheck(int& inputNumber, int lowerBound, int upperBound){
         }
     }
 }
-void goToMenu(){
-    int action;
-    cin >> action;
+void endMenu(){
+   
     cout << endl << "0 - для выхода" << endl;
     inputCheck(button, 0, 0);
-    if (action == 0){
-         logout();
-    }
-   else{
-       cout << endl;
-   }
 }
+void allAppliences( ){
+ ifstream file("appliances.txt"); 
+    string line;
 
- void fileContent(const string& filename, string emptyFileMessage){
+    while (getline(file, line)) { 
+        cout << line <<endl; 
+    }
+
+    file.close();
+}
+void fileContent(const string& filename, string emptyFileMessage){
     string sales;
     ifstream ReadFile(filename);
     if(ReadFile.peek() == std::ifstream::traits_type::eof()){
@@ -50,13 +52,6 @@ void goToMenu(){
     }
     ReadFile.close();
 }
-
-void showInstructions(){
-    cout << "Инструкция:" << endl;
-    fileContent("instructions.txt", " ");
-    goToMenu();
-}
-
 void deleteElement(const string& filename){
     string sold;
     ifstream ReadFile(filename);
@@ -91,23 +86,7 @@ void deleteElement(const string& filename){
         } 
     }
     ReadFile.close();
-    goToMenu();
-}
-void numberOfMaterials(const string& filename, string emptyFileMessage, string upperBound){
-    int count = 0;
-        string currentLine;
-        ifstream ReadDelivered(filename);
-        if (ReadDelivered.peek() == ifstream::traits_type::eof()) {
-            cout << emptyFileMessage << endl;
-        }
-        else {
-            while(getline(ReadDelivered, currentLine)){
-                count++;
-            }
-            cout << "Количество " << upperBound << " товаров: ";
-            cout << count;
-        }
-        ReadDelivered.close();
+    endMenu();
 }
 void moveElement(const string& filename1, const string& filename2) { 
     string sales;
@@ -154,9 +133,9 @@ void moveElement(const string& filename1, const string& filename2) {
         } 
     }
     ReadFile.close();
-    goToMenu();
+    endMenu();
 }
-void maxMinOfMaterials(int menuNumber){
+void maxMinMaterials(int menuNumber){
     ifstream ReadSold("sold.txt");
     if (ReadSold.peek() == ifstream::traits_type::eof()) {
         cout << "Нет заказов." << endl;
@@ -175,7 +154,7 @@ void maxMinOfMaterials(int menuNumber){
         }
         if (Sold.empty()) {
             cout << "Нет никаких заказов." << endl;
-            goToMenu();
+            endMenu();
         }
         
         if (menuNumber == 3) {
@@ -216,7 +195,7 @@ void maxMinOfMaterials(int menuNumber){
         }
     }
     ReadSold.close();
-    goToMenu();
+    endMenu();
 }
 void salaryCounter(const string & filename, string emptyFileMessage){
     int stake = 1000;
@@ -234,7 +213,7 @@ void salaryCounter(const string & filename, string emptyFileMessage){
         while(getline(ReadDelivered, lineCount)){
             count++;
         }
-        cout << "Ваш заработок: " << count * stake << "сомов";
+        cout << "Ваш заработок: " << count * stake << "сом";
         ReadDelivered.close();
     }
     ReadFile.close();
@@ -247,7 +226,7 @@ void searchFromFile(const string& filename){
         inputCheck(subMenuNumber, 1, 2);
         int symbol = 0;
         if(subMenuNumber == 1){
-            cout << "Напишите название материала для поиска:>>";
+            cout << "Напишите название материала для поиска:";
             cin >> nameSearch;
             cout << "Результаты поиска:" << endl;
             ifstream ReadFile(filename);
@@ -280,7 +259,7 @@ void searchFromFile(const string& filename){
         }
         else if(subMenuNumber == 2){
             symbol = 0;
-            cout << endl << "Напишите дату для поиска:>>";
+            cout << endl << "Напишите номер для поиска:>>";
             searchSerialNumber:
             cin >> searchSerialNumber;
             cout << "Результаты поиска:" << endl;
@@ -316,41 +295,72 @@ void searchFromFile(const string& filename){
         }
     }
 }
-void DirectorAcc(){
+void AppliencesNumber(const string& filename, string emptyFileMessage, string upperBound){
+    int count = 0;
+        string currentLine;
+        ifstream ReadDelivered(filename);
+        if (ReadDelivered.peek() == ifstream::traits_type::eof()) {
+            cout << emptyFileMessage << endl;
+        }
+        else {
+            while(getline(ReadDelivered, currentLine)){
+                count++;
+            }
+            cout << "Количество " << upperBound << " техники: ";
+            cout << count;
+        }
+        ReadDelivered.close();
+}
+void directorMenu(){
     int action;
-    
-    cout << "1. Показать список всей бытовой техники ";
-    cout <<"2. Показать количество бытовой техники ";
-    cout << "3. Показать бытовую технику с самым максимальным количеством";
-    cout<<  "4. Показать бытовую технику с самым минимальным количеством";
-    cout << "5. Показать отчет по закупкам об бытовой техники";
-    cout << "6. Выход ( Выходит из программы)";
+    cout << "1. Показать список всей бытовой техники " << endl;
+    cout <<"2. Показать количество бытовой техники " << endl;
+    cout << "3. Показать бытовую технику с самым максимальным количеством" << endl;
+    cout<<  "4. Показать бытовую технику с самым минимальным количеством" << endl;
+    cout << "5. Выход" << endl;
     cin >> action;
     switch(action){
         case 1:
+        allAppliences();
+        endMenu();
+        break;
+        case 2:
+        AppliencesNumber("material.number", "Нет техники.", "отсутствует");
+        endMenu();
+        break;
+        case 3:
+        case 4:
+        maxMinMaterials(action);
+        endMenu();
+        break;
+        case 5:
+        logout();
+        break;
+        default:
+        cout << "no such option";
         
     }
 }
 void menuWorker(){
     int action;
-    cin >> action;
     cout << " 1.Показать весь список материалов для продажи" << endl;
     cout <<"2.Искать материал" << endl;
     cout << "3.Показать отчет по продаже" << endl << "4.Выполнить продажу оборудований" << endl;
     cout << "5.Сделать заказ отсутствующего товара" << endl ;
     cout<< "6.Удалить заказ" << endl;
     cout << "7.Выход" << endl;
+    cin >> action;
     switch(action) { 
         case 1: 
         fileContent("sales.txt", "Нет товаров для продажи."); 
-        goToMenu(); 
+        endMenu(); 
         break; 
         case 2: 
         searchFromFile("sales.txt"); 
          break; 
          case 3: 
         fileContent("sold.txt", "Нет проданных товаров."); 
-        goToMenu(); 
+        endMenu(); 
         break; 
         case 4: 
        fileContent("sales.txt", "Нет товаров для продажи."); 
@@ -365,9 +375,6 @@ void menuWorker(){
        deleteElement("sold.txt"); 
        break; 
        case 7: 
-        showInstructions();
-       break; 
-       case 8: 
         logout();
        break; 
        default: 
@@ -391,27 +398,27 @@ void deliverymenu(){
         case 1: 
     cout << "если закончили нажмите 0 ";
     fileContent("sold.txt", "Нет проданных товаров.");
-    goToMenu(); 
+    endMenu(); 
     break; 
     case 2: 
     fileContent("delivered.txt", "Нет доставленных товаров."); 
-     goToMenu(); 
+     endMenu(); 
      break; 
    case 3: 
      fileContent("sold.txt", "Нет проданных товаров."); 
       moveElement("sold.txt", "delivered.txt"); 
       break; 
     case 4: 
-     numberOfMaterials("delivered.txt", "Нет доставленных товаров.", "доставленнных"); 
-    goToMenu(); 
+     AppliencesNumber("delivered.txt", "Нет доставленных товаров.", "доставленнных"); 
+    endMenu(); 
       break; 
      case 5: 
-      numberOfMaterials("sold.txt", "Нет проданных товаров.", "проданных"); 
-     goToMenu(); 
+      AppliencesNumber("sold.txt", "Нет проданных товаров.", "проданных"); 
+     endMenu(); 
        break; 
      case 6: 
      salaryCounter("delivered.txt", "У вас нет доставленных товаров."); 
-     goToMenu(); 
+     endMenu(); 
      break; 
      case 7: 
      logout();
@@ -432,7 +439,7 @@ void Director(){
     cin >> enteredPassword;
     if (enteredLogin  == login && enteredPassword == password){
             cout << "you are entered" << endl;
-            DirectorAcc();
+            directorMenu();
     }else{
         while (enteredLogin != login or enteredPassword != password){
             cout << " try again"<< endl;
