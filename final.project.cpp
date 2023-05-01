@@ -391,7 +391,7 @@ void deliverymenu(){
     cout << "4. Show the amount of delivered equipment";
     cout << "5. Show the amount of ordered equipment";
     cout << "6. Show my earnings";
-    cout << "7. logout"
+    cout << "7. logout";
       cin >> action;
     switch(action) { 
         case 1: 
