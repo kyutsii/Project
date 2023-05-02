@@ -14,8 +14,9 @@ void logout(){
 }
 void inputCheck(int& inputNumber, int lowerBound, int upperBound){
     while (!(cin >> inputNumber) || inputNumber < lowerBound || inputNumber > upperBound) {
-        cin.clear(); 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    // inputNumber находится вне заданных границ lowerBound и upperBound, цикл будет продолжаться.
+        cin.clear(); //Очищаем поток (чтобы появилась возможность продолжить ввод)
+         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // игнорирует \n
         if(lowerBound == 0 and upperBound == 0){
             cout << "0 - to logout";
         }
@@ -25,16 +26,16 @@ void inputCheck(int& inputNumber, int lowerBound, int upperBound){
     }
 }
 void endMenu(){
-   
+
     cout << endl << "0 - to logout" << endl;
     inputCheck(button, 0, 0);
 }
 void allAppliences(string filename ){
-  ifstream file("appliances.txt"); 
+  ifstream file("appliances.txt");
     string line;
 
-    while (getline(file, line)) { 
-        cout << line << "no appliances " << endl; 
+    while (getline(file, line)) {
+        cout << line << "no appliances " << endl;
     }
 
     file.close();
@@ -42,7 +43,8 @@ void allAppliences(string filename ){
 void fileContent(const string& filename, string emptyFileMessage){
     string sales;
     ifstream ReadFile(filename);
-    if(ReadFile.peek() == std::ifstream::traits_type::eof()){
+    if(ReadFile.peek() == ifstream::traits_type::eof()){ //eof указывает на конец файла. trais_type чтобы определить различные свойства, такие как символы, которые представляют конец файла
+        //peek() для проверки, пустой ли файл
         cout << emptyFileMessage << endl;
     }
     else{
@@ -55,7 +57,7 @@ void fileContent(const string& filename, string emptyFileMessage){
 void deleteElement(const string& filename){
     string sold;
     ifstream ReadFile(filename);
-    if(ReadFile.peek() == std::ifstream::traits_type::eof()){
+    if(ReadFile.peek() == ifstream::traits_type::eof()){
         cout << endl;
     }
     else{
@@ -63,74 +65,75 @@ void deleteElement(const string& filename){
         cout << "write name of appliances you want to delete";
         cin >> DeleteOrder;
         string LineDel;
-        bool elementFound = false; 
+        bool elementFound = false;
         ifstream ReadFiledelOrder(filename);
         ofstream DeleteOrdertemp("deltempsold.txt");
         while(getline (ReadFiledelOrder, LineDel)){
-            if(LineDel.find(DeleteOrder) != string::npos){
-                elementFound = true; 
+            if(LineDel.find(DeleteOrder) != string::npos){ // проверка, содержит ли считанная строка имя товара, который нужно удалить. Если содержит, то переменная elementFound устанавливается в значение true, и строка не записывается в выходной файл.
+                elementFound = true;
                 continue;
             }
             else{
-                DeleteOrdertemp << LineDel << endl;
+                DeleteOrdertemp << LineDel << endl; //запись считанной строки в выходной файл, если она не содержит имя товара, который нужно удалить.
             }
         }
         ReadFiledelOrder.close();
         DeleteOrdertemp.close();
-        remove(filename.c_str());
+        remove(filename.c_str());//принимает аргументом строку типа const char* , а c_str озволяет передавать строку типа std::string в функцию, ожидающую строку типа const char*.
         rename("deltempsold.txt", filename.c_str());
-        if (elementFound) { 
+        if (elementFound) {
             cout << "your request hav been accepted." << endl;
-        } else { 
+        } else {
             cout << "this appliances has been ended" << endl;
-        } 
+        }
     }
     ReadFile.close();
     endMenu();
 }
-void moveElement(const string& filename1, const string& filename2) { 
+void moveElement(const string& filename1, const string& filename2) {
     string sales;
-    ifstream ReadFile(filename1); 
+    ifstream ReadFile(filename1);
     if(ReadFile.peek() == std::ifstream::traits_type::eof()){
         cout << endl;
     }
     else{
         cout << "eter the name of appliances you wanted to sell" << endl;
-        string elementToMove; 
-        cin >> elementToMove; 
-     
-        string currentLineSell; 
-        string currentLineSold; 
-        bool elementFound = false; 
-        ifstream sale(filename1); 
-        ofstream saletemp("saletemp.txt"); 
-        ifstream sold(filename2); 
-        ofstream soldtemp("soldtemp.txt"); 
-        while (getline(sold, currentLineSold)) { 
-            soldtemp << currentLineSold << endl; 
-        } 
-        while (getline(sale, currentLineSell)) { 
+        string elementToMove;
+        cin >> elementToMove;
+
+        string currentLineSell;
+        string currentLineSold;
+        bool elementFound = false;
+        ifstream sale(filename1);
+        ofstream saletemp("saletemp.txt");
+        ifstream sold(filename2);
+        ofstream soldtemp("soldtemp.txt");
+        while (getline(sold, currentLineSold)) {
+            soldtemp << currentLineSold << endl;
+        }
+        while (getline(sale, currentLineSell)) {
             if (currentLineSell.find(elementToMove) != string::npos) {
-                elementFound = true; 
-                soldtemp << currentLineSell << endl; 
-            } else { 
-                saletemp << currentLineSell << endl; 
-            } 
-        } 
-        sale.close(); 
-        saletemp.close(); 
-        sold.close(); 
-        soldtemp.close(); 
-        remove(filename1.c_str()); 
-        rename("saletemp.txt", filename1.c_str()); 
-        remove(filename2.c_str()); 
-        rename("soldtemp.txt", filename2.c_str()); 
-     
-        if (elementFound) { 
+                elementFound = true;
+                soldtemp << currentLineSell << endl;
+            } else {
+                saletemp << currentLineSell << endl;
+            }
+        }
+        sale.close();
+        saletemp.close();
+        sold.close();
+        soldtemp.close();
+        remove(filename1.c_str());
+        rename("saletemp.txt", filename1.c_str());
+        //удаляет файл filename1 и переименовывает временный файл saletemp.txt в filename1.
+        remove(filename2.c_str());
+        rename("soldtemp.txt", filename2.c_str());
+
+        if (elementFound) {
             cout << "Your request accepted." << endl;
-        } else { 
+        } else {
             cout << "this appliances has been ended" << endl;
-        } 
+        }
     }
     ReadFile.close();
     endMenu();
@@ -144,10 +147,10 @@ void maxMinAppliences(int menuNumber){
         string name;
         int quantity;
         string serialNumber;
-    
+
         while (ReadSold >> name >> quantity >> serialNumber) {
             sold Appliences;
-            Appliences.name = name;
+            Appliences.name = name; //мы присваиваем свойству name объекта Appliences значение переменной name, которое мы получили из файла.
             Appliences.quantity = quantity;
             Appliences.serialNumber = serialNumber;
             Sold.push_back(Appliences);
@@ -156,10 +159,10 @@ void maxMinAppliences(int menuNumber){
             cout << "no orders." << endl;
             endMenu();
         }
-        
+
         if (menuNumber == 3) {
             int MaterialWithMaxOrders = INT_MIN;
-            for (auto now : Sold) {
+            for (auto now : Sold) { // auto автоматически принимает любой тип переменной
                 if (now.quantity > MaterialWithMaxOrders) {
                     MaterialWithMaxOrders = now.quantity;
                 }
@@ -242,7 +245,7 @@ void searchFromFile(const string& filename){
                         cout << currentLine << endl;
                     }
                 }
-    
+
                 if(symbol != 0) {
                     cout << endl << "0 - to logout" << endl;
                     inputCheck(button, 0, 0);
@@ -265,8 +268,8 @@ void searchFromFile(const string& filename){
             cout << "result" << endl;
             string currentLine;
             ifstream ReadFile("sales.txt");
-            if(ReadFile.peek() == std::ifstream::traits_type::eof()){
-                cout << "not " << endl;
+            if(ReadFile.peek() == ifstream::traits_type::eof()){
+                cout << "not found " << endl;
                 break;
             }
             else{
@@ -276,8 +279,8 @@ void searchFromFile(const string& filename){
                         cout << currentLine << endl;
                     }
                 }
-                
-                
+
+
                 if(symbol != 0){
                     cout << endl << "0 - to logout" << endl;
                     inputCheck(button, 0, 0);
@@ -321,24 +324,27 @@ void directorMenu(){
     cin >> action;
     switch(action){
         case 1:
-        allAppliences("allAppliences.txt");
-        endMenu();
-        break;
+            allAppliences("allAppliences.txt");
+            endMenu();
+            break;
         case 2:
-        AppliencesNumber("material.number","No appliances.", "missing");
-        endMenu();
-        break;
+            AppliencesNumber("material.number","No appliances.", "missing");
+            endMenu();
+            break;
         case 3:
+            maxMinAppliences(action);
+            endMenu();
+            break;
         case 4:
-        maxMinAppliences(action);
-        endMenu();
-        break;
+            maxMinAppliences(action);
+            endMenu();
+            break;
         case 5:
-        logout();
-        break;
+            logout();
+            break;
         default:
         cout << "no such option";
-        
+
     }
 }
 void menuWorker(){
@@ -350,85 +356,85 @@ void menuWorker(){
     cout << "6. Delete an order" << endl;
     cout << "7. logout" << endl;
     cin >> action;
-    switch(action) { 
-        case 1: 
-        fileContent("sales.txt", "No appliance for sale"); 
-        endMenu(); 
-        break; 
-        case 2: 
-        searchFromFile("sales.txt"); 
-         break; 
-         case 3: 
-        fileContent("sold.txt", "No sold items."); 
-        endMenu(); 
-        break; 
-        case 4: 
-       fileContent("sales.txt", "No appliance for sale"); 
-       moveElement("sales.txt", "sold.txt"); 
-       break; 
+    switch(action) {
+        case 1:
+            fileContent("sales.txt", "No appliance for sale");
+            endMenu();
+            break;
+        case 2:
+            searchFromFile("sales.txt");
+            break;
+        case 3:
+            fileContent("sold.txt", "No sold items.");
+            endMenu();
+            break;
+        case 4:
+            fileContent("sales.txt", "No appliance for sale");
+            moveElement("sales.txt", "sold.txt");
+            break;
        case 5:
-       fileContent("noappliences.txt", "No out-of-stock items.");  
-       moveElement("noappliences.txt", "need_appliences.txt"); 
-       break; 
-       case 6: 
-       fileContent("sold.txt", "No orders."); 
-       deleteElement("sold.txt"); 
-       break; 
-       case 7: 
-        logout();
-       break; 
-       default: 
-       cout <<"no such option";
-       break; 
+            fileContent("noappliences.txt", "No out-of-stock items.");
+            moveElement("noappliences.txt", "need_appliences.txt");
+            break;
+       case 6:
+            fileContent("sold.txt", "No orders.");
+            deleteElement("sold.txt");
+            break;
+       case 7:
+            logout();
+            break;
+       default:
+            cout <<"no such option";
+            break;
     }
-    
+
 }
 void deliverymenu(){
     int action;
-    cout << "1. Show list of materials for delivery";
+    cout << "1. Show list of appliances for delivery";
     cout << "2. Show delivered orders";
     cout << "3. Deliver an order";
     cout << "4. Show the amount of delivered equipment";
     cout << "5. Show the amount of ordered equipment";
     cout << "6. Show my earnings";
     cout << "7. logout";
-      cin >> action;
-    switch(action) { 
-        case 1: 
-    cout << "If finished, press 0. ";
-    fileContent("sold.txt", "No sold items");
-    endMenu(); 
-    break; 
-    case 2: 
-    fileContent("delivered.txt", "No delivered items."); 
-     endMenu(); 
-     break; 
-   case 3: 
-     fileContent("sold.txt", "No sold items"); 
-      moveElement("sold.txt", "delivered.txt"); 
-      break; 
-    case 4: 
-     AppliencesNumber("delivered.txt", "No items delivered.", "delivered"); 
-    endMenu(); 
-      break; 
-     case 5: 
-      AppliencesNumber("sold.txt", "No items sold.", "sold"); 
-     endMenu(); 
-       break; 
-     case 6: 
-     salaryCounter("delivered.txt", "You have no items delivered"); 
-     endMenu(); 
-     break; 
-     case 7: 
-     logout();
-     break; 
-     default: 
-     cout << "no such option";
-      break; 
+    cin >> action;
+    switch(action) {
+        case 1:
+            cout << "If finished, press 0. ";
+            fileContent("sold.txt", "No sold items");
+            endMenu();
+            break;
+        case 2:
+            fileContent("delivered.txt", "No delivered items.");
+            endMenu();
+            break;
+        case 3:
+            fileContent("sold.txt", "No sold items");
+            moveElement("sold.txt", "delivered.txt");
+            break;
+        case 4:
+            AppliencesNumber("delivered.txt", "No items delivered.", "delivered");
+            endMenu();
+            break;
+        case 5:
+            AppliencesNumber("sold.txt", "No items sold.", "sold");
+            endMenu();
+            break;
+        case 6:
+            salaryCounter("delivered.txt", "You have no items delivered");
+            endMenu();
+            break;
+        case 7:
+            logout();
+            break;
+        default:
+            cout << "no such option";
+            break;
       }
 }
 void Director(){
-   
+
     string login = "dir123";
     string password = "dir321";
     string enteredLogin;
@@ -477,12 +483,12 @@ void Delivery(){
     string enteredPassword;
     cout << "write your login and password" << endl;
     cout << "login:" << endl;
-    cin >>enteredLogin;
+    cin >> enteredLogin;
     cout << "password:" << endl;
     cin >> enteredPassword;
     if (enteredLogin  == login && enteredPassword == password){
              deliverymenu();
-            
+
     }else{
         while (enteredLogin != login or enteredPassword != password){
             cout << " try again"<< endl;
