@@ -10,23 +10,23 @@ struct sold {
     string serialNumber;
 };
 void logout(){
-    cout << "Вы вышли из аккаунта.";
+    cout << "you have logout of your account";
 }
 void inputCheck(int& inputNumber, int lowerBound, int upperBound){
     while (!(cin >> inputNumber) || inputNumber < lowerBound || inputNumber > upperBound) {
         cin.clear(); 
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
         if(lowerBound == 0 and upperBound == 0){
-            cout << "Для выхода нажмите 0";
+            cout << "0 - to logout";
         }
         else {
-            cout << "Произошла ошибка. Введите число от " << lowerBound << " до " << upperBound << endl;
+            cout << " enter number from" << lowerBound << " to" << upperBound << endl;
         }
     }
 }
 void endMenu(){
    
-    cout << endl << "0 - для выхода" << endl;
+    cout << endl << "0 - to logout" << endl;
     inputCheck(button, 0, 0);
 }
 void allAppliences(string filename ){
@@ -60,7 +60,7 @@ void deleteElement(const string& filename){
     }
     else{
         string DeleteOrder;
-        cout << "Напишите название товара заказа который вы бы хотели удалить?>>";
+        cout << "write name of appliances you want to delete";
         cin >> DeleteOrder;
         string LineDel;
         bool elementFound = false; 
@@ -80,9 +80,9 @@ void deleteElement(const string& filename){
         remove(filename.c_str());
         rename("deltempsold.txt", filename.c_str());
         if (elementFound) { 
-            cout << "Ваш запрос принят." << endl; 
+            cout << "your request hav been accepted." << endl;
         } else { 
-            cout << "Запас данного материала закончился, пожалуйста сделайте заказ на поставку!" << endl; 
+            cout << "this appliances has been ended" << endl;
         } 
     }
     ReadFile.close();
@@ -95,7 +95,7 @@ void moveElement(const string& filename1, const string& filename2) {
         cout << endl;
     }
     else{
-        cout << "Пожалуйста напишите название техники, которую вы бы хотели продать" << endl; 
+        cout << "eter the name of appliances you wanted to sell" << endl;
         string elementToMove; 
         cin >> elementToMove; 
      
@@ -110,7 +110,7 @@ void moveElement(const string& filename1, const string& filename2) {
             soldtemp << currentLineSold << endl; 
         } 
         while (getline(sale, currentLineSell)) { 
-            if (currentLineSell.find(elementToMove) != string::npos) { 
+            if (currentLineSell.find(elementToMove) != string::npos) {
                 elementFound = true; 
                 soldtemp << currentLineSell << endl; 
             } else { 
@@ -127,9 +127,9 @@ void moveElement(const string& filename1, const string& filename2) {
         rename("soldtemp.txt", filename2.c_str()); 
      
         if (elementFound) { 
-            cout << "Ваш запрос принят." << endl; 
+            cout << "Your request accepted." << endl;
         } else { 
-            cout << "Запас данной техники закончился, пожалуйста сделайте заказ на поставку!" << endl; 
+            cout << "this appliances has been ended" << endl;
         } 
     }
     ReadFile.close();
@@ -138,7 +138,7 @@ void moveElement(const string& filename1, const string& filename2) {
 void maxMinAppliences(int menuNumber){
     ifstream ReadSold("sold.txt");
     if (ReadSold.peek() == ifstream::traits_type::eof()) {
-        cout << "Нет заказов." << endl;
+        cout << "no orders." << endl;
     } else {
         vector<sold> Sold;
         string name;
@@ -153,7 +153,7 @@ void maxMinAppliences(int menuNumber){
             Sold.push_back(Appliences);
         }
         if (Sold.empty()) {
-            cout << "Нет никаких заказов." << endl;
+            cout << "no orders." << endl;
             endMenu();
         }
         
@@ -170,7 +170,7 @@ void maxMinAppliences(int menuNumber){
                     appliencesWithMaxOrders.push_back(now.name);
                 }
             }
-            cout << "Результаты: ";
+            cout << "result ";
             for (auto now : appliencesWithMaxOrders) {
                 cout << now << endl;
             }
@@ -188,7 +188,7 @@ void maxMinAppliences(int menuNumber){
                     AppliencesWithMinOrders.push_back(now.name);
                 }
             }
-            cout << "Результаты:  ";
+            cout << "result  ";
             for (auto now : AppliencesWithMinOrders) {
                 cout << now << endl;
             }
@@ -213,7 +213,7 @@ void salaryCounter(const string & filename, string emptyFileMessage){
         while(getline(ReadDelivered, lineCount)){
             count++;
         }
-        cout << "Ваш заработок: " << count * stake << "сом";
+        cout << "your earnings " << count * stake << "som";
         ReadDelivered.close();
     }
     ReadFile.close();
@@ -222,16 +222,16 @@ void searchFromFile(const string& filename){
     int subMenuNumber;
     string nameSearch, searchSerialNumber;
     while(true){
-        cout << "Выберите: каким способом хотите искать:" << endl << "1.По названию" << endl << "2.По номеру" << endl;
+        cout << "Choose how you want to find" << endl << "1.by name" << endl << "2.by serial number" << endl;
         inputCheck(subMenuNumber, 1, 2);
         int symbol = 0;
         if(subMenuNumber == 1){
-            cout << "Напишите название техники для поиска:";
+            cout << "enter tname of appliances to find";
             cin >> nameSearch;
-            cout << "Результаты поиска:" << endl;
+            cout << "result" << endl;
             ifstream ReadFile(filename);
             if (ReadFile.peek() == ifstream::traits_type::eof()) {
-                cout << "Нет техники для продажи." << endl;
+                cout << "no appliance found" << endl;
                 break;
             }
             else {
@@ -244,29 +244,29 @@ void searchFromFile(const string& filename){
                 }
     
                 if(symbol != 0) {
-                    cout << endl << "0 - для выхода" << endl;
+                    cout << endl << "0 - to logout" << endl;
                     inputCheck(button, 0, 0);
                     break;
                 }
                 else if(symbol == 0){
-                    cout << "Не удалось найти товар " << endl;
-                    cout << "Попробуйте ввести заново";
+                    cout << "the appliances couldn't be found " << endl;
+                    cout << "try again";
                 }
             }
-            cout << endl << "0 - для выхода" << endl;
+            cout << endl << "0 - to logout" << endl;
             inputCheck(button, 0, 0);
             ReadFile.close();
         }
         else if(subMenuNumber == 2){
             symbol = 0;
-            cout << endl << "Напишите номер для поиска:";
+            cout << endl << "write number to find";
             searchSerialNumber:
             cin >> searchSerialNumber;
-            cout << "Результаты поиска:" << endl;
+            cout << "result" << endl;
             string currentLine;
             ifstream ReadFile("sales.txt");
             if(ReadFile.peek() == std::ifstream::traits_type::eof()){
-                cout << "Нет товаров для продажи." << endl;
+                cout << "not " << endl;
                 break;
             }
             else{
@@ -279,17 +279,17 @@ void searchFromFile(const string& filename){
                 
                 
                 if(symbol != 0){
-                    cout << endl << "0 - для выхода" << endl;
+                    cout << endl << "0 - to logout" << endl;
                     inputCheck(button, 0, 0);
                     break;
                 }
                 else if(symbol == 0){
-                    cout << "Не удалось найти товар " << endl;
-                    cout << "Попробуйте  заново";
+                    cout << "Appliences couldn't be found " << endl;
+                    cout << "try again";
                     goto searchSerialNumber;
                 }
             }
-            cout << endl << "0 - для выхода" << endl;
+            cout << endl << "0 - to logout" << endl;
             inputCheck(button, 0, 0);
             ReadFile.close();
         }
@@ -306,7 +306,7 @@ void AppliencesNumber(const string& filename, string emptyFileMessage, string up
             while(getline(ReadDelivered, currentLine)){
                 count++;
             }
-            cout << "Количество " << upperBound << " техники: ";
+            cout << "quantity " << upperBound << " appliances: ";
             cout << count;
         }
         ReadDelivered.close();
